@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="WpfApplication1.UserControl1"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="21" d:DesignWidth="287" xmlns:my="clr-namespace:WpfApplication1" Name="schedule10hour" Margin="1" HorizontalContentAlignment="Left" HorizontalAlignment="Left">
+    <Grid Height="19" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <my:SlotStatus HorizontalAlignment="Left" Margin="1,1,0,0" x:Name="slotStatus1" VerticalAlignment="Top" Height="18" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="30,1,0,0" x:Name="slotStatus2" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="59,1,0,0" x:Name="slotStatus3" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="88,1,0,0" x:Name="slotStatus4" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="117,1,0,0" x:Name="slotStatus5" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="146,1,0,0" x:Name="slotStatus6" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="175,1,0,0" x:Name="slotStatus7" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="204,1,0,0" x:Name="slotStatus8" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="233,1,0,0" x:Name="slotStatus9" VerticalAlignment="Top" Width="23" />
+        <my:SlotStatus Height="18" HorizontalAlignment="Left" Margin="262,0,0,0" x:Name="slotStatus10" VerticalAlignment="Top" Width="23" />
+    </Grid>
+</UserControl>
