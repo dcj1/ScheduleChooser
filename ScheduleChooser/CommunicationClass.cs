@@ -37,8 +37,8 @@ namespace WpfApplication1
                 {
                     //Inside, so we'll use our local login credentials
                     service.UseDefaultCredentials = true;
-                    service.AutodiscoverUrl("cjamison@illumina.com", RedirectionUrlValidationCallback);
                     userName = Environment.UserName + "@illumina.com"; //Hmmm. Wonder why I have to put this on?
+                    service.AutodiscoverUrl(userName, RedirectionUrlValidationCallback);
                     PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
                     UserPrincipal u = UserPrincipal.Current;
                     displayName = u.DisplayName;
