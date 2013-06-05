@@ -43,7 +43,7 @@ namespace WpfApplication1
                 qDay = (DateTime)day; //cast to overcome MS null value stupidity
  
                 //Get personal calendar
-                if (!commObj.getCal(qDay, 60))
+                if (!commObj.getCal(qDay))
                 {
                     throw new Exception ("Couldn't get calendar for some unknown reason");
                 }
@@ -150,28 +150,22 @@ namespace WpfApplication1
                     slotRequest10.setStatus(slotRequest10.BUSY);
                 }
 
-                //Get queue calendars
-                List<string> whom = new List<string>(); //replace with real code
-                whom.Add("clarson@illumina.com");
-                whom.Add("hnguyen2@illumina.com");
-                whom.Add("iwallace@illumina.com");
-                if (!commObj.getCal(whom, qDay, 60))
-                {
-                    throw new Exception("Couldn't get calendar for some unknown reason");
-                }
-
+                //this will be replaced by some dynamic programming
                 List<UserControl1> slots = new List<UserControl1>();
                 slots.Add(userControl11);
                 slots.Add(userControl12);
                 slots.Add(userControl13);
-                for (int i = 0; i < whom.Count; i++)
+                for (int i = 0; i < commObj.queueMemberCount(); i++)
                 {
-                    if (commObj.isAvailable(new DateTime(qDay.Year,qDay.Month,qDay.Day,7,0,0,i))) {
+                    if (commObj.isAvailable(new DateTime(qDay.Year,qDay.Month,qDay.Day,7,0,0,0),i)) 
+                    {
                         slots[i].slotStatus1.setStatus(slots[i].slotStatus1.OPEN);
-                    } else {
+                    } 
+                    else 
+                    {
                         slots[i].slotStatus1.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 8, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 8, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus2.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -179,7 +173,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus2.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 9, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 9, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus3.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -187,7 +181,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus3.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 10, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 10, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus4.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -195,7 +189,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus4.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 11, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 11, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus5.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -203,7 +197,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus5.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 12, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 12, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus6.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -211,7 +205,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus6.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 13, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 13, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus7.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -219,7 +213,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus7.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 14, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 14, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus8.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -227,7 +221,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus8.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 15, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 15, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus9.setStatus(slots[i].slotStatus1.OPEN);
                     }
@@ -235,7 +229,7 @@ namespace WpfApplication1
                     {
                         slots[i].slotStatus9.setStatus(slots[i].slotStatus1.BUSY);
                     }
-                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 16, 0, 0, i)))
+                    if (commObj.isAvailable(new DateTime(qDay.Year, qDay.Month, qDay.Day, 16, 0, 0, 0), i)) 
                     {
                         slots[i].slotStatus10.setStatus(slots[i].slotStatus1.OPEN);
                     }
