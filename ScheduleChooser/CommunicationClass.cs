@@ -107,6 +107,8 @@ namespace WpfApplication1
             queueMembers.Add("hnguyen2@illumina.com");
             queueMembers.Add("ctetzlaff@illumina.com");
             queueMembers.Add("iwallace@illumina.com");
+            queueMembers.Add("clarson@illumina.com");
+            queueMembers.Add("jrogers@illumina.com");
             shiftDuration = 60;
         }
 

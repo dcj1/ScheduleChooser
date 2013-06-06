@@ -31,11 +31,7 @@
         <Label Content="5" FontSize="18" Height="36" HorizontalAlignment="Left" Margin="309,60,0,0" Name="label11" VerticalAlignment="Top" Width="19" />
         <Label Content="Name of TAS" Height="25" HorizontalAlignment="Left" Margin="28,9,0,0" Name="TASName" VerticalAlignment="Top" Width="162" />
         <DatePicker Height="25" HorizontalAlignment="Left" Margin="31,38,0,0" Name="datePicker1" VerticalAlignment="Top" Width="115" SelectedDateChanged="datePicker1_SelectedDateChanged" />
-        <Grid Height="180" HorizontalAlignment="Left" Margin="32,142,0,0" Name="grid1" VerticalAlignment="Top" Width="296">
-            <my:UserControl1 HorizontalAlignment="Left" x:Name="userControl11" VerticalAlignment="Top" />
-            <my:UserControl1 HorizontalAlignment="Left" Margin="0,23,0,0" x:Name="userControl12" VerticalAlignment="Top" />
-            <my:UserControl1 HorizontalAlignment="Left" Margin="0,0,0,116" x:Name="userControl13" VerticalAlignment="Bottom" />
-        </Grid>
+        <Grid Height="180" HorizontalAlignment="Left" Margin="32,142,0,0" Name="grid1" VerticalAlignment="Top" Width="296"/>
         <Label Content="Queue Name" Height="24" HorizontalAlignment="Left" Margin="182,9,0,0" Name="QueueName" VerticalAlignment="Top" Width="146" />
         <Button Content="Reset" Height="23" HorizontalAlignment="Left" Margin="166,38,0,0" Name="Reset" VerticalAlignment="Top" Width="75" />
         <Button Content="Submit" Height="23" HorizontalAlignment="Left" Margin="253,38,0,0" Name="submitRequest" VerticalAlignment="Top" Width="75" />

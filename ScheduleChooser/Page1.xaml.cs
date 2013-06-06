@@ -20,12 +20,22 @@ namespace WpfApplication1
     public partial class Page1 : Page
     {
         private CommunicationClass commObj;
+        private List<UserControl1> slots;
 
         //this need to be much more clever in the setup -- can we be dynamic?
         public Page1(CommunicationClass c)
         {
             InitializeComponent();
+            slots = new List<UserControl1>();
             commObj = c;
+            int memberCount = commObj.queueMemberCount();
+            StackPanel sp1 = new StackPanel { Orientation = Orientation.Vertical };
+            for (int i = 0; i < memberCount; i++)
+            {
+                slots.Add(new UserControl1());
+                sp1.Children.Add(slots[i]);
+            }
+            grid1.Children.Add(sp1);
             TASName.Content = commObj.fetchDisplayName();
             QueueName.Content = commObj.fetchQueueName();
         }
@@ -151,11 +161,11 @@ namespace WpfApplication1
                 }
 
                 //this will be replaced by some dynamic programming
-                List<UserControl1> slots = new List<UserControl1>();
-                slots.Add(userControl11);
-                slots.Add(userControl12);
-                slots.Add(userControl13);
-                for (int i = 0; i < commObj.queueMemberCount(); i++)
+                //slots.Add(userControl11);
+                //slots.Add(userControl12);
+                //slots.Add(userControl13);
+                int memberCount = commObj.queueMemberCount();
+                for (int i = 0; i < memberCount; i++)
                 {
                     if (commObj.isAvailable(new DateTime(qDay.Year,qDay.Month,qDay.Day,7,0,0,0),i)) 
                     {
