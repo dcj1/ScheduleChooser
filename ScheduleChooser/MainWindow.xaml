@@ -8,5 +8,6 @@
         <Button Content="Approve" Height="23" HorizontalAlignment="Left" Margin="35,265,0,0" Name="Manage" VerticalAlignment="Top" Width="75" />
         <Button Content="Trade Shifts" Height="23" HorizontalAlignment="Left" Margin="35,107,0,0" Name="trades" VerticalAlignment="Top" Width="75" />
         <Frame Height="283" HorizontalAlignment="Left" Margin="131,16,0,0" Name="mainFrame" VerticalAlignment="Top" Width="360" />
+        <Button x:Name="manageButton" Content="Manage" HorizontalAlignment="Left" Margin="35,238,0,0" VerticalAlignment="Top" Width="75" Click="manageButton_Click"/>
     </Grid>
 </Window>

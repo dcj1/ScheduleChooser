@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
 using EWS = Microsoft.Exchange.WebServices.Data;
 using System.DirectoryServices.AccountManagement;
 
@@ -17,11 +21,28 @@ namespace WpfApplication1
         private string userName;
         private string displayName;
         private string queueName;
-        private List<String> queueMembers;
-        private int shiftDuration;
         private EWS.ExchangeService service;
         private EWS.GetUserAvailabilityResults freeBusy;
         private Random r; // for testing purposes
+        private Hashtable queueDefList;
+        private List<Membership> tasNames;
+        string configFile;
+
+        public class QueueDef
+        {
+            public string queueName { get; set; }
+            public string owner { get; set; }
+            public int slotDuration { get; set; }
+            public DateTime startTime { get; set; }
+            public DateTime endTime { get; set; }
+        }
+
+        public class Membership
+        {
+            public string queueName { get; set; }
+            public string userName { get; set; }
+            public bool primary { get; set; }
+        }
 
         /// <summary>
         /// Constructor for the communication class.
@@ -42,6 +63,9 @@ namespace WpfApplication1
                     PrincipalContext ctx = new PrincipalContext(ContextType.Domain);
                     UserPrincipal u = UserPrincipal.Current;
                     displayName = u.DisplayName;
+                    configFile = "config.xml";
+                    InitQueueList();
+                    initQueueMembers();
                     initQueue();
                 } 
                 else
@@ -103,13 +127,196 @@ namespace WpfApplication1
         {
             //We'll fix this later
             queueName = "Bioinformatics";
-            queueMembers = new List<string>();
-            queueMembers.Add("hnguyen2@illumina.com");
-            queueMembers.Add("ctetzlaff@illumina.com");
-            queueMembers.Add("iwallace@illumina.com");
-            queueMembers.Add("clarson@illumina.com");
-            queueMembers.Add("jrogers@illumina.com");
-            shiftDuration = 60;
+        }
+
+        private void initQueueMembers()
+        {
+            tasNames = new List<Membership>();
+            List<string> tempNames = new List<string>();
+            tempNames.Add("hnguyen2@illumina.com");
+            tempNames.Add("ctetzlaff@illumina.com");
+            tempNames.Add("iwallace@illumina.com");
+            tempNames.Add("clarson@illumina.com");
+            tempNames.Add("jrogers@illumina.com");
+            foreach (string name in tempNames)
+            {
+                Membership tn = new Membership();
+                tn.userName = name;
+                tn.queueName = "Bioinformatics";
+                tn.primary = true;
+                tasNames.Add(tn);
+            }
+        }
+
+        private void InitQueueList()
+        {
+            //List<string> qs = new List<string>();
+            //qs.Add("Bioinformatics");
+            //qs.Add("SamplePrep");
+            //queueDefList = new Hashtable();
+            //foreach (string s in qs)
+            //{
+            //    QueueDef qd = new QueueDef();
+            //    qd.queueName = s;
+            //    qd.owner = "cjamison@illumina.com";
+            //    qd.slotDuration = 60;
+            //    qd.startTime = new DateTime(2013, 1, 1, 7, 0, 0);
+            //    qd.endTime = new DateTime(2013, 1, 1, 17, 0, 0);
+            //    queueDefList.Add(s, qd);
+            //}
+
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(List<QueueDef>));
+                serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
+                serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
+                FileStream fs = new FileStream(configFile, FileMode.Open);
+                List<QueueDef> q = (List<QueueDef>)serializer.Deserialize(fs);
+                queueDefList = new Hashtable();
+                foreach (QueueDef qd in q)
+                {
+                    queueDefList.Add(qd.queueName, qd);
+                }
+                fs.Close();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        private void serializer_UnknownNode (object sender, XmlNodeEventArgs e)
+        {
+            Console.WriteLine("Unknown Node:" + e.Name + "\t" + e.Text);
+        }
+
+        private void serializer_UnknownAttribute(object sender, XmlAttributeEventArgs e)
+        {
+            System.Xml.XmlAttribute attr = e.Attr;
+            Console.WriteLine("Unknown attribute " + attr.Name + "='" + attr.Value + "'");
+        }
+
+
+        public void saveQueueList()
+        {
+            try
+            {
+                List<QueueDef> q = new List<QueueDef>();
+                foreach (string s in queueDefList.Keys)
+                {
+                    q.Add((QueueDef)queueDefList[s]);
+                }
+                XmlSerializer serializer = new XmlSerializer(q.GetType());
+                TextWriter outFile = new StreamWriter(configFile);
+                serializer.Serialize(outFile, q);
+                outFile.Close();
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine("a generic unprintable XML error occured");
+                System.Console.WriteLine(e);
+            }
+        }
+
+        public List<string> fetchQueueNames()
+        {
+            List<string> res = new List<string>();
+            foreach (String s in queueDefList.Keys)
+            {
+                res.Add(s);
+            }
+            return res;
+        }
+
+        public void putInQueue(string name, string queue, bool isPrimary)
+        {
+            Membership tn = new Membership();
+            tn.userName = name;
+            tn.queueName = queue;
+            tn.primary = isPrimary;
+            tasNames.Add(tn);
+        }
+
+        public void removeFromQueue(string name, string queue)
+        {
+            tasNames.RemoveAll(m => (m.userName == name && m.queueName == queue));
+        }
+
+
+        public List<string> getTASNames(string queueName, bool isPrimary)
+        {
+            List<string> retval = new List<string>();
+            foreach (Membership member in tasNames)
+            {
+                if (member.queueName.Equals(queueName) && member.primary.Equals(isPrimary))
+                {
+                    retval.Add(member.userName);
+                }
+            }
+            return retval;
+        }
+
+        public List<string> getTASNames(string queueName)
+        {
+            List<string> retval = new List<string>();
+            foreach (Membership member in tasNames)
+            {
+                if (member.queueName.Equals(queueName))
+                {
+                    retval.Add(member.userName);
+                }
+            }
+            return retval;
+        }
+
+        public List<string> getTASNames()
+        {
+            List<string> retval = new List<string>();
+            foreach (Membership member in tasNames)
+            {
+                retval.Add(member.userName);
+            }
+            return retval;
+        }
+
+        public int getQueueSlotDuration(string q)  
+        {
+            try 
+            {
+                int retVal = ((QueueDef)queueDefList[q]).slotDuration;
+                return retVal;
+            } 
+            catch 
+            {
+                return 60;
+            }
+        }
+
+        public DateTime getQueueStartTime(string q) 
+        {
+            try
+            {
+                DateTime retval = ((QueueDef)queueDefList[q]).startTime;
+                return retval;
+            }
+            catch
+            {
+                return new DateTime(2013, 1, 1, 7, 0, 0);
+            }
+        }
+
+        public DateTime getQueueEndTime(string q) 
+        {
+            try
+            {
+                DateTime retval = ((QueueDef)queueDefList[q]).endTime;
+                return retval;
+            }
+            catch
+            {
+                return new DateTime(2013, 1, 1, 17, 0, 0);
+            }
         }
 
         /// <summary>
@@ -127,7 +334,7 @@ namespace WpfApplication1
         /// <returns>Integer count of queue other members</returns>
         public int queueMemberCount()
         {
-            return queueMembers.Count;
+            return tasNames.Count;
         }
 
         /// <summary>
@@ -149,7 +356,7 @@ namespace WpfApplication1
                     AttendeeType = EWS.MeetingAttendeeType.Required
                 });
 
-                foreach (string who in queueMembers)
+                foreach (string who in getTASNames())
                 {
                     whoList.Add(new EWS.AttendeeInfo()
                     {
@@ -160,20 +367,16 @@ namespace WpfApplication1
 
                 //fetch availability
                 EWS.AvailabilityOptions opt = new EWS.AvailabilityOptions();
-                opt.MeetingDuration = shiftDuration;
+                opt.MeetingDuration = ((QueueDef)queueDefList[queueName]).slotDuration;
                 opt.RequestedFreeBusyView = EWS.FreeBusyViewType.FreeBusy;
                 EWS.TimeWindow tw = new EWS.TimeWindow(start, start.AddDays(1));
                 freeBusy = service.GetUserAvailability(whoList, tw, EWS.AvailabilityData.FreeBusy, opt);
-                foreach (EWS.AttendeeAvailability a in freeBusy.AttendeesAvailability)
-                {
-                    Console.WriteLine(a.CalendarEvents.Count);
-                }
                 result = true;
             }
             catch (Exception e)
             {
                 Console.WriteLine("{0} Exception caught.", e);
-                throw (e);
+                //throw (e);
             }
             return result;
 
@@ -206,7 +409,7 @@ namespace WpfApplication1
                 foreach (EWS.CalendarEvent cal in avail.CalendarEvents)
                 {
                     //look for conditions where the calendar should be busy.
-                    DateTime shiftEnd = shiftStart.AddMinutes(shiftDuration);
+                    DateTime shiftEnd = shiftStart.AddMinutes(((QueueDef)queueDefList[queueName]).slotDuration);
                     if (((shiftStart == cal.StartTime) ||
                         ((shiftStart < cal.EndTime) && (cal.EndTime <= shiftEnd)) || 
                         ((shiftStart <= cal.StartTime) && (cal.StartTime < shiftEnd)) ||

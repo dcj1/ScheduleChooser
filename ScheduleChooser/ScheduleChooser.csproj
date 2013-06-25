@@ -65,6 +65,9 @@
     <Compile Include="Page1.xaml.cs">
       <DependentUpon>Page1.xaml</DependentUpon>
     </Compile>
+    <Compile Include="QueueManager.xaml.cs">
+      <DependentUpon>QueueManager.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SlotApproval.xaml.cs">
       <DependentUpon>SlotApproval.xaml</DependentUpon>
     </Compile>
@@ -73,6 +76,9 @@
     </Compile>
     <Compile Include="SlotStatus.xaml.cs">
       <DependentUpon>SlotStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TimeChooser.xaml.cs">
+      <DependentUpon>TimeChooser.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
@@ -96,6 +102,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="QueueManager.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SlotApproval.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +115,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SlotStatus.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TimeChooser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

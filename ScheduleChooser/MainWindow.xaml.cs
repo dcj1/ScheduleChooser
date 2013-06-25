@@ -44,5 +44,11 @@ namespace WpfApplication1
                 }
             }
         }
+
+        private void manageButton_Click(object sender, RoutedEventArgs e)
+        {
+            QueueManager qm = new QueueManager(new CommunicationClass(this));
+
+        }
     }
 }
