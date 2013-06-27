@@ -319,6 +319,19 @@ namespace WpfApplication1
             }
         }
 
+        internal string getQueueOwnerName(string p)
+        {
+            try
+            {
+                string retval = ((QueueDef)queueDefList[p]).owner;
+                return retval;
+            }
+            catch
+            {
+                return userName;
+            }
+        }
+
         /// <summary>
         /// Get the name of the user's queue.
         /// </summary>
@@ -428,5 +441,37 @@ namespace WpfApplication1
             return result;
         }
 
+        internal void updateQueueList(string p1, string p2, string p3, string p4, string p5)
+        {
+            try
+            {
+                ((QueueDef)queueDefList[p1]).owner = p2;
+                ((QueueDef)queueDefList[p1]).startTime = timeStringToDate(p3);
+                ((QueueDef)queueDefList[p1]).endTime = timeStringToDate(p4);
+                ((QueueDef)queueDefList[p1]).slotDuration = stringToInt(p5);
+            }
+            catch
+            {
+                QueueDef temp = new QueueDef
+                {
+                    queueName = p1,
+                    owner = p2,
+                    startTime = timeStringToDate(p3),
+                    endTime = timeStringToDate(p4),
+                    slotDuration = stringToInt(p5)
+                };
+                queueDefList.Add(p1, temp);
+            }
+        }
+
+        private int stringToInt(string p5)
+        {
+            throw new NotImplementedException();
+        }
+
+        private DateTime timeStringToDate(string p3)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

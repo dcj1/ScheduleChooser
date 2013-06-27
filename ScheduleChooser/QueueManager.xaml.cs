@@ -25,6 +25,7 @@ namespace WpfApplication1
             InitializeComponent();
             commObj = c;        
             QueueList.ItemsSource = commObj.fetchQueueNames();
+            manageQueueBox.ItemsSource = commObj.fetchQueueNames();
             this.Show();
         }
 
@@ -113,9 +114,6 @@ namespace WpfApplication1
                 SecondaryMemberList.Items.Add(s);
             }
 
-            startTimeTextBox.Text = commObj.getQueueStartTime(e.ToString()).ToShortTimeString();
-            endTimeTextBox.Text = commObj.getQueueEndTime(e.ToString()).ToShortTimeString();
-            durationTextBox.Text = commObj.getQueueSlotDuration(e.ToString()).ToString();
         }
 
         private void moveListItem(string s, ListView source, ListView dest)
@@ -133,6 +131,37 @@ namespace WpfApplication1
         private void NewQueueButton_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void manageQueueBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            queueOwnerTextBox.Text = commObj.getQueueOwnerName(e.ToString());
+            startTimeTextBox.Text = commObj.getQueueStartTime(e.ToString()).ToShortTimeString();
+            endTimeTextBox.Text = commObj.getQueueEndTime(e.ToString()).ToShortTimeString();
+            durationTextBox.Text = commObj.getQueueSlotDuration(e.ToString()).ToString();
+
+        }
+
+        private void manageQueueBox_TextInput(object sender, string e)
+        {
+            queueOwnerTextBox.Text = commObj.getQueueOwnerName(e.ToString());
+            startTimeTextBox.Text = commObj.getQueueStartTime(e.ToString()).ToShortTimeString();
+            endTimeTextBox.Text = commObj.getQueueEndTime(e.ToString()).ToShortTimeString();
+            durationTextBox.Text = commObj.getQueueSlotDuration(e.ToString()).ToString();
+        }
+
+        private void manageQueueBox_TextInput(object sender, KeyEventArgs e)
+        {
+            if (e.Key.Equals(Key.Enter))
+            {
+                manageQueueBox_TextInput(sender, manageQueueBox.Text);
+            }
+        }
+
+        private void queueEditSaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            commObj.updateQueueList(manageQueueBox.Text, queueOwnerTextBox.Text, startTimeTextBox.Text, 
+                endTimeTextBox.Text, durationTextBox.Text);
         }
     }
 }
