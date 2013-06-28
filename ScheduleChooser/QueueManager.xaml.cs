@@ -23,10 +23,16 @@ namespace WpfApplication1
         public QueueManager(CommunicationClass c)
         {
             InitializeComponent();
-            commObj = c;        
+            commObj = c;
+            initLists();
+            this.Show();
+        }
+
+        private void initLists()
+        {
             QueueList.ItemsSource = commObj.fetchQueueNames();
             manageQueueBox.ItemsSource = commObj.fetchQueueNames();
-            this.Show();
+            TASList.ItemsSource = commObj.getTASNames();
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
@@ -49,7 +55,7 @@ namespace WpfApplication1
             foreach (string s in names)
             {
                 commObj.putInQueue(s, QueueList.SelectedItem.ToString(), true);
-                moveListItem(s, TASList, PrimaryMemberList);
+                moveListItem(s, TASList, PrimaryMemberList, false);
             }
         }
 
@@ -63,7 +69,7 @@ namespace WpfApplication1
             foreach (string s in names)
             {
                 commObj.removeFromQueue(s, QueueList.SelectedItem.ToString());
-                moveListItem(s, PrimaryMemberList, TASList);
+                moveListItem(s, PrimaryMemberList, TASList, true);
             }
         }
 
@@ -77,7 +83,7 @@ namespace WpfApplication1
             foreach (string s in names)
             {
                 commObj.putInQueue(s, QueueList.SelectedItem.ToString(), false);
-                moveListItem(s, TASList, SecondaryMemberList);
+                moveListItem(s, TASList, SecondaryMemberList, false);
             }
         }
 
@@ -91,7 +97,7 @@ namespace WpfApplication1
             foreach (string s in names)
             {
                 commObj.removeFromQueue(s, QueueList.SelectedItem.ToString()); 
-                moveListItem(s, SecondaryMemberList, TASList);
+                moveListItem(s, SecondaryMemberList, TASList, true);
             }
         }
 
@@ -116,11 +122,17 @@ namespace WpfApplication1
 
         }
 
-        private void moveListItem(string s, ListView source, ListView dest)
+        private void moveListItem(string s, ListView source, ListView dest, bool del)
         {
             string s2 = s.Clone() as string;
-            source.Items.Remove(s);
-            dest.Items.Add(s2);
+            if (del)
+            {
+                source.Items.Remove(s);
+            }
+            else
+            {
+                dest.Items.Add(s2);
+            }
         }
 
         private void EditTASList_Click(object sender, RoutedEventArgs e)
@@ -135,10 +147,21 @@ namespace WpfApplication1
 
         private void manageQueueBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            queueOwnerTextBox.Text = commObj.getQueueOwnerName(e.ToString());
-            startTimeTextBox.Text = commObj.getQueueStartTime(e.ToString()).ToShortTimeString();
-            endTimeTextBox.Text = commObj.getQueueEndTime(e.ToString()).ToShortTimeString();
-            durationTextBox.Text = commObj.getQueueSlotDuration(e.ToString()).ToString();
+            try
+            {
+                queueOwnerTextBox.Text = commObj.getQueueOwnerName(manageQueueBox.SelectedValue.ToString());
+                startTimeTextBox.Text = commObj.getQueueStartTime(manageQueueBox.SelectedValue.ToString()).ToShortTimeString();
+                endTimeTextBox.Text = commObj.getQueueEndTime(manageQueueBox.SelectedValue.ToString()).ToShortTimeString();
+                durationTextBox.Text = commObj.getQueueSlotDuration(manageQueueBox.SelectedValue.ToString()).ToString();
+            }
+            catch
+            {
+                //we've _probably_ reset the manageQueueBox to null
+                queueOwnerTextBox.Text = "";
+                startTimeTextBox.Text = "";
+                endTimeTextBox.Text = "";
+                durationTextBox.Text = "";
+            }
 
         }
 
@@ -162,6 +185,8 @@ namespace WpfApplication1
         {
             commObj.updateQueueList(manageQueueBox.Text, queueOwnerTextBox.Text, startTimeTextBox.Text, 
                 endTimeTextBox.Text, durationTextBox.Text);
+            manageQueueBox.SelectedIndex = -1;
+            initLists();
         }
     }
 }

@@ -275,7 +275,10 @@ namespace WpfApplication1
             List<string> retval = new List<string>();
             foreach (Membership member in tasNames)
             {
-                retval.Add(member.userName);
+                if (!retval.Contains(member.userName))
+                {
+                    retval.Add(member.userName);
+                }
             }
             return retval;
         }
@@ -445,6 +448,7 @@ namespace WpfApplication1
         {
             try
             {
+                //See if we can add the new information to an existing record
                 ((QueueDef)queueDefList[p1]).owner = p2;
                 ((QueueDef)queueDefList[p1]).startTime = timeStringToDate(p3);
                 ((QueueDef)queueDefList[p1]).endTime = timeStringToDate(p4);
@@ -452,6 +456,7 @@ namespace WpfApplication1
             }
             catch
             {
+                //We can't add, so we create
                 QueueDef temp = new QueueDef
                 {
                     queueName = p1,
@@ -466,12 +471,26 @@ namespace WpfApplication1
 
         private int stringToInt(string p5)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return Convert.ToInt32(p5);
+            }
+            catch
+            {
+                return 60;
+            }
         }
 
         private DateTime timeStringToDate(string p3)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return DateTime.ParseExact(p3, "h:mm tt", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            catch
+            {
+                return new DateTime(2013, 1, 1, 1, 0, 0);
+            }
         }
     }
 }
