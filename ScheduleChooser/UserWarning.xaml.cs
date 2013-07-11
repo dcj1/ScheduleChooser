@@ -14,37 +14,35 @@ using System.Windows.Shapes;
 namespace WpfApplication1
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for UserWarning.xaml
     /// </summary>
-    public partial class LoginDialog : Window
+    public partial class UserWarning : Window
     {
         /// <summary>
-        ///Constructor
+        /// constructor
         /// </summary>
-        public LoginDialog()
+        public UserWarning()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// what to do whaen we click
+        /// Sets the warning message
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void submit_Click(object sender, RoutedEventArgs e)
+        /// <param name="message">String to display</param>
+        public void setMessage(string message)
         {
-            if ((userNameBox.Text.Length < 1) || (passwordBox1.Password.Length < 1)) return;
-            this.DialogResult = true;
+            WarningTextBlock.Text = message;
         }
 
         /// <summary>
-        /// what to do whaen we click
+        /// Send it all away.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void cancel_Click(object sender, RoutedEventArgs e)
+        private void acknowledge_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            this.Close();
         }
     }
 }
